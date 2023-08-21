@@ -30,6 +30,7 @@ jobs:
     - name: Case - Flaws False
       run: |
         cd ./flaws_false
+        chmod +x ../../../src/commands/fmt.sh
         ../../../src/commands/fmt.sh
         
     - name: Case - Flaws True
