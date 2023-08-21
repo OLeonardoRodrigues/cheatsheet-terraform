@@ -22,8 +22,9 @@ jobs:
 
     - name: Run README Generator
       run: |
-        chmod +x ./src/readme_generator.sh
-        ./src/readme_generator.sh
+        cd ./src
+        chmod +x ./readme_generator.sh
+        ./readme_generator.sh
 
     - name: Push it back to Main
       run: |
@@ -32,4 +33,3 @@ jobs:
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git commit -am "Generate README"
         git push
-    
