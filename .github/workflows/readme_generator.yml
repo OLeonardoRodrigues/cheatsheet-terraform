@@ -33,4 +33,5 @@ jobs:
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git commit --allow-empty -am "[AUTO] Generate README"
         git tag $(date "+%y.%m.%d.%H.%M.%S")
+        git push --verbose --atomic
         git push --verbose --tags --atomic
