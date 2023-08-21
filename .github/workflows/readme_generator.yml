@@ -32,6 +32,8 @@ jobs:
         git config --global user.email 'oleonardorodrigues@users.noreply.github.com'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git commit --allow-empty -am "[AUTO] Generate README"
-        git tag $(date "+%y.%m.%d.%H.%M.%S")
+        github_tag=$(date "+%y.%m.%d.%H.%M.%S")
+        git tag $github_tag
         git push --verbose --atomic
         git push --verbose --tags --atomic
+        gh release create $github_tag --generate-notes --verify-tag
