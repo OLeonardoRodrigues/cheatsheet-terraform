@@ -24,16 +24,14 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
-    - name: Go to Examples FMT Dir
-      run: cd ./examples/fmt
-
     - name: Case - Flaws False
       run: |
-        cd ./flaws_false
+        cd ./examples/fmt/flaws_false
         chmod +x ../../../src/commands/fmt.sh
         ../../../src/commands/fmt.sh
         
     - name: Case - Flaws True
       run: |
-        cd ../flaws_true
+        cd ./examples/fmt/flaws_false
+        chmod +x ../../../src/commands/fmt.sh
         ../../../src/commands/fmt.sh
