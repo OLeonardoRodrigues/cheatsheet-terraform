@@ -31,16 +31,16 @@ jobs:
       run: |
         cd ./examples/fmt/flaws_false
         chmod +x ../../../src/cat_all.sh
-        ../../../src/cat_all.sh ./examples/fmt/flaws_true
+        ../../../src/cat_all.sh .
         chmod +x ../../../src/commands/fmt.sh
         ../../../src/commands/fmt.sh
-        ../../../src/cat_all.sh ./examples/fmt/flaws_true
+        ../../../src/cat_all.sh .
 
     - name: Case - Flaws True
       run: |
         cd ./examples/fmt/flaws_true
         chmod +x ../../../src/cat_all.sh
-        ../../../src/cat_all.sh ./examples/fmt/flaws_true
+        ../../../src/cat_all.sh .
         chmod +x ../../../src/commands/fmt.sh
         ../../../src/commands/fmt.sh
-        ../../../src/cat_all.sh ./examples/fmt/flaws_true
+        ../../../src/cat_all.sh .
