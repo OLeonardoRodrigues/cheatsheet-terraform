@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   formatting:
-    name: 'Formatting Tests'
+    name: 'Formatting Cases'
     runs-on: ubuntu-latest
 
     defaults:
@@ -24,13 +24,15 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
-    - name: Run Flaws False Case
+    - name: Go to Examples FMT Dir
+      run: cd ./examples/fmt
+
+    - name: Case - Flaws False
       run: |
-        cd ./examples/fmt/flaws_false
+        cd ./flaws_false
         ../../../src/commands/fmt.sh
         
-    - name: Run Flaws True Case
+    - name: Case - Flaws True
       run: |
-        cd ./examples/fmt/flaws_true
+        cd ../flaws_true
         ../../../src/commands/fmt.sh
-      
