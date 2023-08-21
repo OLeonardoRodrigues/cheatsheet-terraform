@@ -40,3 +40,4 @@ jobs:
         git push --verbose --atomic
         git push --verbose --tags --atomic
         gh release create $github_tag --generate-notes --verify-tag
+        gh release upload $github_tag ../..README.md
