@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  TF_LOG: TRACE
+
 jobs:
   formatting:
     name: 'Formatting Cases'
