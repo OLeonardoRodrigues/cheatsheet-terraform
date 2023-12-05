@@ -1,0 +1,72 @@
+name: Backup Repo To AWS CodeCommit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backup_to_codecommit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ci-pipe-repo-backup .
+          docker tag ci-pipe-repo-backup:latest ci-pipe-repo-backup:main
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin 306727587552.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Push Docker Image to ECR
+        run: |
+          docker push 306727587552.dkr.ecr.us-east-1.amazonaws.com/ci-pipe-repo-backup:main
+
+      - name: Create Web Identity Token
+        run: echo "${{ secrets.BITBUCKET_STEP_OIDC_TOKEN }}" > web-identity-token
+
+      - name: Run CodeCommit Backup
+        run: |
+          docker run \
+            -e AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} \
+            -e AWS_REGION=${{ secrets.AWS_DEFAULT_REGION }} \
+            -e AWS_ROLE_ARN=${{ secrets.AWS_ROLE_ARN }} \
+            -e AWS_WEB_IDENTITY_TOKEN_FILE=/github/workspace/web-identity-token \
+            ci-pipe-repo-backup
+
+jobs:
+  snyk_scan_dockerfile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ secrets.BITBUCKET_REPO_SLUG }} -f Dockerfile .
+
+      - name: Run Snyk Scan
+        run: |
+          docker run \
+            -e SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} \
+            -e LANGUAGE=docker \
+            -e IMAGE_NAME=${{ secrets.BITBUCKET_REPO_SLUG }} \
+            -e TARGET_FILE=Dockerfile \
+            -e SEVERITY_THRESHOLD=high \
+            -e ORGANIZATION=qa-zgw \
+            -e MONITOR=true \
+            -e DEBUG=true \
+            -e DONT_BREAK_BUILD=true \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            306727587552.dkr.ecr.us-east-1.amazonaws.com/ci-docker-awscli
