@@ -41,7 +41,6 @@ jobs:
             -e AWS_WEB_IDENTITY_TOKEN_FILE=/github/workspace/web-identity-token \
             ci-pipe-repo-backup
 
-jobs:
   snyk_scan_dockerfile:
     runs-on: ubuntu-latest
 
